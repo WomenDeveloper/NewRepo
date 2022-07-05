@@ -1,0 +1,24 @@
+﻿@using WebApp.CustomHelpers;
+@addTagHelper WebApp.CustomHelpers.YaziTagHelper,WebApp
+@addTagHelper WebApp.CustomHelpers.Mesaj,WebApp
+
+@Html.ActionLink("Gonder","Gonder")
+
+<a asp-action="Gonder">Gonder 2</a>
+
+<h3>Custom Helpers</h3>
+
+@Html.Baslik("Merhaba Dunya")
+
+@Html.Liste((string[])ViewBag.Sehirler)
+
+
+<marquee direction="right">Haberler Haberler</marquee>
+<br />
+
+
+<yazi hareket-yonu="left" mesaj-metni="Bugun hava guzel..." yazi-rengi="orange"></yazi>
+<yazi hareket-yonu="right" mesaj-metni="Bugun hava guzel..." yazi-rengi="red"></yazi>
+
+
+<mesaj core-mesaj="Deneme 123" core-zemin-rengi="gray" core-yazi-rengi="darkorange" core-yazi-boyutu=30></mesaj>

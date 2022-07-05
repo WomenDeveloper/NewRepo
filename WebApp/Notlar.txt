@@ -1,0 +1,127 @@
+﻿1)WebAPI => Versiyonlama
+2)WebAPI => (CORE 6) =>Minimal API
+3)IoC => DI =>AddTransient, AddScoped, AddSingleton
+4)HTML Helper, Tag Helper => Nasıl yazılır?
+5)Session,Cookie 
+6)Middleware
+
+*********************
+API Versiyonlama
+*Servisler uzerinde yapılan degisiklikleri Versiyon numaraları ile yonetmek için kullanılır...
+Verisyonlama Destegi için yuklenecek Kutuphane
+ 1- Nuget => Microsoft.AspNetCore.Mvc.Versioning
+ 2- program.cs => builder.Services.AddApiVersioning();
+
+ Yontemler
+ Querystring => ?api-version=1.1
+ URl         => ..../v{version:apiVerison}/....
+
+ *********************
+ CORE 6 ile gelen Yenilik :Minimal API
+ *Aktif hale getirmek için:
+   Yeni proje oluşturulurken ilgili checkbox tan işareti kaldırınız...
+
+ Neden var? Daha az kaynak kullandığı için
+ Controller yoksa API nereye yazılacak? program.cs uzerinde yazılır...
+ (Bu işi yapan middleware yapıları gelmiştir... )
+
+ app.MapGet("/",()=>"....");
+ app.MapPost() = Httpost
+ app.MapPut()
+ app.MapDelete()
+
+ *********************
+ //IoC DIP
+ 1-Model için
+   IEntity, Product ve Manager sınıflarını olustur...
+   
+ 2-Program.cs içerisinde
+
+ ihityaca gore ilgili ayarları ekle...
+
+ builder.Services.AddTransient<IEntity<Product>,Product>()
+ builder.Services.AddTransient<Manager>()
+
+ builder.Services.AddScoped<IEntity<Product>,Product>()
+ builder.Services.AddScoped<Manager>()
+
+ builder.Services.AddSingleton<IEntity<Product>,Product>()
+ builder.Services.AddSingleton<Manager>()
+
+ 3-Controller içinde 
+
+ ctor Injection kullanarak ilgili sınıfları bagla...
+
+ Istenilen verileri View'a aktar
+
+ 4-View tarafında...
+ Gelen verileri goster
+
+ ****
+ OZET: Yasam Suresi: Transient < Scoped < Singleton
+ ****
+
+
+ *********************
+ 4-Html Helpers Nasıl Yazılır?
+   *Extension metod olarak yazılırlar...
+   *Statik sinif icerisine yazılmalıdır...(Sınıfın adı onemli degil...)
+   *Statik sınıf içerisindeki metodlarda statik olmalıdır...
+   *Hangi yapıya ekleme yapılacaksa this keyword u ile o yapı belirtilmelidir...
+   
+ Kullanırken; sınıf using ile eklenmeli...
+
+   MVC      => HtmlHelper sınıfına ekleme yapılır...
+   MVC Core => IHtmlHelper arayuzune yaparız...
+
+   *********************
+   5-Tag Helpers
+    *TagHelper sınıfından turtilmiş bir sınıf olusturulur...
+    *Process() metodu override edilir...
+    *Sonra iki farklı şekilde;
+      *output.tagname
+      *output.Attributes ...
+      *output.Content.Append() şeklinde
+
+      *Diğer yontem ise
+      *output.Content.SetHtmlContent() şeklinde 
+
+    *Kullanırken ise;
+      *1) Kullanılacak olan sayfaya @addTegHelper şeklinde eklenir...
+      *2) Tüm projenini kullanmasını istiyorsak;
+          _ViewImports.cshtml sayfasına @addTagHelper olarak eklenir...
+
+
+   *********************
+   5-Session
+   *** Bir kullnıcının, kullandığı bilgisayarda belirli bir sure boyunca aktif olmadığı anda session'lar ölür..
+   *** Bunun için Session kullanımında Timeout onemli dir...
+   *** Aynı zamanda Sessionlar üzerinden controller lar arası ve ya View lere veri taşınabilinir...
+   *** Nesne olan verileri taşıyabilmek için JSON veya XML serileştirme gibi yöntemler kullanılabilinir...
+   *** Nesneyi kullanırken de deserialization islemi yapılmalıdır...
+
+   ***Session kullanımı baslangicta aktif değildir..
+   ***Aktif hale getirmek için;
+     *** builder.Services.AddSession(); //session ayarları da burada yapılır...
+     *** app.UseSession();
+
+
+  *** Session içerisindeki veriye doğrudan View den ulaşmak istersek...
+    * program.cs => builder.Services.AddHttpContextAccessor();
+    * View de    =>@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+  ***Session ları belirli bir sure sonunda sonlandırmak istersek;
+     program.cs => builder.Services.AddSession() içerisinde...
+                   IdleTimeout= TimeSpan.FromSeconds(30) 
+                   * 30 sn boyunca...
+
+  ***Cookie
+
+
+  ***Middleware
+  Map() => eşleşme yapmak için kullanılır
+  Use() => (r,n)
+  Run() => (r)
+
+
+

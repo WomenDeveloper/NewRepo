@@ -1,0 +1,9 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<h4>Session - Cookie Kullanımı</h4>
+
+
+@*Calismaz..*@
+@*@HttpContext.Session.GetString("sakla")*@
+@ViewBag.Aktar <br /><br />
+@HttpContextAccessor.HttpContext.Session.GetString("sakla")
